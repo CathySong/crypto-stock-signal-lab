@@ -40,3 +40,8 @@ sec_concepts:
   - OperatingIncomeLoss
   - CashAndCashEquivalentsAtCarryingValue
   - ResearchAndDevelopmentExpense
+  - CommonStockSharesOutstanding
+  - WeightedAverageNumberOfDilutedSharesOutstanding
+  - WeightedAverageNumberOfSharesOutstandingBasic
+  - NetCashProvidedByUsedInOperatingActivities
+  - PaymentsToAcquirePropertyPlantAndEquipment
