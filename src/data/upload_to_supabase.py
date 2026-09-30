@@ -81,10 +81,29 @@ def clean_records(records: list[dict]) -> list[dict]:
     return cleaned
 
 
+def dedupe_on_conflict(records: list[dict], on_conflict: str) -> list[dict]:
+    """
+    Keep only the last occurrence of each conflict-key tuple.
+
+    Postgres' ON CONFLICT DO UPDATE raises "cannot affect row a second
+    time" if a single INSERT statement contains duplicate rows on the
+    conflict target -- which happens with SEC XBRL data (the same
+    concept/period can appear across more than one filing). De-duplicating
+    client-side, keeping the most recently seen row, avoids this.
+    """
+    keys = [k.strip() for k in on_conflict.split(",")]
+    deduped: dict[tuple, dict] = {}
+    for row in records:
+        key = tuple(row.get(k) for k in keys)
+        deduped[key] = row  # later rows overwrite earlier ones with same key
+    return list(deduped.values())
+
+
 def upsert_table(base_url: str, headers: dict, table: str, records: list[dict], on_conflict: str) -> int:
     """POST rows to PostgREST with upsert (merge-duplicates on conflict target)."""
     if not records:
         return 0
+    records = dedupe_on_conflict(records, on_conflict)
     total = 0
     url = f"{base_url}/rest/v1/{table}"
     params = {"on_conflict": on_conflict}
