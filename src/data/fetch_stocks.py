@@ -82,7 +82,7 @@ def fetch_one(ticker: str, period: str, interval: str) -> pd.DataFrame:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Download stock/ETF OHLCV data via yfinance.")
-    parser.add_argument("--period", default="5y", help="yfinance period, e.g. 1y, 5y, max (default: 5y)")
+    parser.add_argument("--period", default="max", help="yfinance period, e.g. 1y, 5y, max (default: max)")
     parser.add_argument("--interval", default="1d", help="yfinance interval (default: 1d)")
     parser.add_argument(
         "--tickers",
