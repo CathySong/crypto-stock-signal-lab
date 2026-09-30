@@ -1,0 +1,42 @@
+# MVP asset universe for crypto-stock-signal-lab
+# Keep this small on purpose (6 assets) for v1: 3 stocks + 3 crypto.
+# ticker  -> used by yfinance + SEC EDGAR (stocks only)
+# cg_id   -> CoinGecko coin id, used by fetch_crypto.py
+
+stocks:
+  - ticker: AAPL
+    name: Apple Inc.
+    has_fundamentals: true
+  - ticker: NVDA
+    name: NVIDIA Corporation
+    has_fundamentals: true
+  - ticker: SPY
+    name: SPDR S&P 500 ETF Trust
+    has_fundamentals: false   # ETF, no XBRL companyfacts
+
+crypto:
+  - cg_id: bitcoin
+    symbol: BTC
+    name: Bitcoin
+  - cg_id: ethereum
+    symbol: ETH
+    name: Ethereum
+  - cg_id: solana
+    symbol: SOL
+    name: Solana
+
+# SEC XBRL "us-gaap" concepts we pull from companyfacts for fundamentals.
+# Not every company reports every tag every period; the fetcher skips
+# missing ones gracefully.
+sec_concepts:
+  - Revenues
+  - RevenueFromContractWithCustomerExcludingAssessedTax
+  - NetIncomeLoss
+  - EarningsPerShareBasic
+  - EarningsPerShareDiluted
+  - Assets
+  - Liabilities
+  - StockholdersEquity
+  - OperatingIncomeLoss
+  - CashAndCashEquivalentsAtCarryingValue
+  - ResearchAndDevelopmentExpense
