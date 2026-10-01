@@ -15,6 +15,7 @@ data/raw/**/*.jsonl
 data/processed/**/*.csv
 data/processed/**/*.parquet
 data/processed/**/*.html
+data/processed/**/*.md
 !data/raw/**/.gitkeep
 !data/processed/**/.gitkeep
 

@@ -32,9 +32,9 @@ audited instead of taken on faith.
 
 ## Project status
 
-Early stage / actively under construction. Current milestone: a full
-baseline research pipeline: data ingestion, feature engineering, scoring,
-position sizing, and backtesting across the v1 asset universe.
+Baseline v1 is complete: data ingestion, feature engineering, scoring,
+position sizing, backtesting, ML benchmarking, dashboarding, Supabase
+upload support, CI, and watchlist reporting across the v1 asset universe.
 
 ## Asset universe (v1)
 
@@ -84,10 +84,11 @@ python -m src.features.fundamentals
 python -m src.scoring.run_scores
 python -m src.backtest.run_backtests
 python -m src.ml.run_walkforward
+python -m src.reports.build_watchlist
 python -m src.dashboard.build_static
 
 # Optional: push raw + processed outputs to Supabase
-python -m src.data.upload_to_supabase --only scores,backtests,ml
+python -m src.data.upload_to_supabase --only scores,backtests,ml,watchlist
 
 # Local smoke tests
 python -m unittest discover -s tests
@@ -113,6 +114,8 @@ pull a different asset than what's in `config/assets.yaml`.
 - [x] Supabase upload support for processed scores, backtest summaries, and
       ML benchmark results
 - [x] CI smoke tests for core scoring, ML, backtest, and upload helpers
+- [x] Research watchlist report combining scores, backtests, ML context, and
+      plain-language triage flags
 
 ## Design principles
 

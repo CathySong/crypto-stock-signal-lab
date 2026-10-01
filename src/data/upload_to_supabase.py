@@ -19,11 +19,12 @@ via the Supabase SQL Editor before using this script):
     asset_scores(symbol, date, ...)
     backtest_results(symbol, strategy, start_date, end_date, ...)
     ml_walkforward_results(symbol, horizon_days, ...)
+    research_watchlist(symbol, date, ...)
 
 Usage:
     python -m src.data.upload_to_supabase
     python -m src.data.upload_to_supabase --only stocks
-    python -m src.data.upload_to_supabase --only scores,backtests,ml
+    python -m src.data.upload_to_supabase --only scores,backtests,ml,watchlist
     python -m src.data.upload_to_supabase --only scores --dry-run
 """
 from __future__ import annotations
@@ -48,10 +49,11 @@ CRYPTO_DIR = DATA_RAW_DIR / "crypto"
 SCORES_DIR = DATA_PROCESSED_DIR / "scores"
 BACKTEST_DIR = DATA_PROCESSED_DIR / "backtests"
 ML_DIR = DATA_PROCESSED_DIR / "ml"
+REPORTS_DIR = DATA_PROCESSED_DIR / "reports"
 
 BATCH_SIZE = 500  # rows per REST request; keeps payloads well under limits
 
-TARGETS = {"stocks", "fundamentals", "crypto", "scores", "backtests", "ml"}
+TARGETS = {"stocks", "fundamentals", "crypto", "scores", "backtests", "ml", "watchlist"}
 
 
 def get_client(env_path: Path | None = None) -> tuple[str, dict]:
@@ -287,12 +289,31 @@ def upload_ml_results(base_url: str | None, headers: dict | None, dry_run: bool 
     )
 
 
+def upload_watchlist(base_url: str | None, headers: dict | None, dry_run: bool = False) -> None:
+    path = REPORTS_DIR / "watchlist.csv"
+    if not path.exists():
+        return
+    df = pd.read_csv(path)
+    if df.empty:
+        return
+    records = df.to_dict("records")
+    logger.info("Uploading research_watchlist (%d rows)", len(records))
+    maybe_upsert(
+        base_url,
+        headers,
+        "research_watchlist",
+        records,
+        on_conflict="symbol,date",
+        dry_run=dry_run,
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Upload local raw and processed data files into Supabase Postgres tables.")
     parser.add_argument(
         "--only",
         default=None,
-        help="Comma-separated subset: stocks,fundamentals,crypto,scores,backtests,ml (default: all)",
+        help="Comma-separated subset: stocks,fundamentals,crypto,scores,backtests,ml,watchlist (default: all)",
     )
     parser.add_argument("--dry-run", action="store_true", help="Validate local files and print row counts without uploading.")
     args = parser.parse_args()
@@ -319,6 +340,8 @@ def main() -> None:
         upload_backtest_results(base_url, headers, dry_run=args.dry_run)
     if "ml" in targets:
         upload_ml_results(base_url, headers, dry_run=args.dry_run)
+    if "watchlist" in targets:
+        upload_watchlist(base_url, headers, dry_run=args.dry_run)
 
     logger.info("Done.")
 

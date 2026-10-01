@@ -100,6 +100,28 @@ create table if not exists ml_walkforward_results (
     primary key (symbol, horizon_days)
 );
 
+create table if not exists research_watchlist (
+    symbol                    text not null,
+    date                      date not null,
+    research_action           text,
+    priority_score            numeric,
+    final_score               numeric,
+    timing_score              numeric,
+    value_score               numeric,
+    risk_score                numeric,
+    price                     numeric,
+    suggested_pct_of_account  numeric,
+    stop_distance_pct         numeric,
+    best_backtest_strategy    text,
+    best_backtest_sharpe      numeric,
+    best_backtest_return      numeric,
+    best_backtest_drawdown    numeric,
+    ml_auc                    numeric,
+    ml_strategy_return        numeric,
+    flags                     text,
+    primary key (symbol, date)
+);
+
 -- Helpful indexes for time-series lookups
 create index if not exists idx_stock_prices_date on stock_prices (date);
 create index if not exists idx_crypto_prices_date on crypto_prices (date);
@@ -107,6 +129,7 @@ create index if not exists idx_stock_fundamentals_ticker on stock_fundamentals (
 create index if not exists idx_asset_scores_date on asset_scores (date);
 create index if not exists idx_backtest_results_symbol on backtest_results (symbol);
 create index if not exists idx_ml_walkforward_results_symbol on ml_walkforward_results (symbol);
+create index if not exists idx_research_watchlist_date on research_watchlist (date);
 
 -- Row Level Security: enabled by default on new Supabase projects.
 -- Server-side scripts use the service role key, which bypasses RLS
@@ -117,3 +140,4 @@ alter table crypto_prices enable row level security;
 alter table asset_scores enable row level security;
 alter table backtest_results enable row level security;
 alter table ml_walkforward_results enable row level security;
+alter table research_watchlist enable row level security;
