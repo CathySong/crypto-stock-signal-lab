@@ -83,6 +83,7 @@ python -m src.features.technical
 python -m src.features.fundamentals
 python -m src.scoring.run_scores
 python -m src.backtest.run_backtests
+python -m src.ml.run_walkforward
 ```
 
 Each script also accepts a `--tickers` / `--coins` override if you want to
@@ -98,7 +99,7 @@ pull a different asset than what's in `config/assets.yaml`.
 - [x] Position sizing helper (account risk % + stop distance -> suggested
       dollar allocation)
 - [x] Daily backtest framework with fees, slippage, and no-lookahead signals
-- [ ] ML classifier (direction / probability of positive return) benchmarked
+- [x] ML classifier (direction / probability of positive return) benchmarked
       against the rule-based baselines
 - [ ] Dashboard for browsing per-asset scores and backtest reports
 
