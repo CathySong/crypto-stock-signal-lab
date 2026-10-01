@@ -143,7 +143,15 @@ def process_stock_file(csv_path) -> pd.DataFrame:
 def process_crypto_file(csv_path) -> pd.DataFrame:
     df = pd.read_csv(csv_path, parse_dates=["date"])
     df = df.sort_values("date").reset_index(drop=True)
-    return compute_features(df, "price_usd")
+    out = compute_features(df, "price_usd")
+
+    # Crypto-specific liquidity signal: how much of the asset's total
+    # market cap trades hands in a day. Very low values can mean it's
+    # harder to enter/exit a position without moving the price.
+    if "volume_usd" in out.columns and "market_cap_usd" in out.columns:
+        out["volume_to_mcap_ratio"] = out["volume_usd"] / out["market_cap_usd"]
+
+    return out
 
 
 def main() -> None:
