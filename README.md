@@ -32,10 +32,9 @@ audited instead of taken on faith.
 
 ## Project status
 
-Early stage / actively under construction. Current milestone: data
-ingestion layer (stock prices, fundamentals, crypto market data). Feature
-engineering, scoring, and backtesting come next — see `docs/roadmap.md`
-(coming soon) for the full plan.
+Early stage / actively under construction. Current milestone: a full
+baseline research pipeline: data ingestion, feature engineering, scoring,
+position sizing, and backtesting across the v1 asset universe.
 
 ## Asset universe (v1)
 
@@ -71,13 +70,19 @@ cp .env.example .env
 # (SEC requires a real contact identifier on every request)
 
 # Stock/ETF daily prices
-python -m src.data.fetch_stocks --period 5y
+python -m src.data.fetch_stocks --period max
 
 # Equity fundamentals (SEC XBRL facts)
 python -m src.data.fetch_fundamentals
 
 # Crypto market data
 python -m src.data.fetch_crypto --days 365
+
+# Feature engineering, scoring, and backtests
+python -m src.features.technical
+python -m src.features.fundamentals
+python -m src.scoring.run_scores
+python -m src.backtest.run_backtests
 ```
 
 Each script also accepts a `--tickers` / `--coins` override if you want to
@@ -86,13 +91,13 @@ pull a different asset than what's in `config/assets.yaml`.
 ## Roadmap
 
 - [x] Data ingestion: stock prices, equity fundamentals, crypto market data
-- [ ] Feature engineering: technical indicators (RSI, MACD, moving averages)
+- [x] Feature engineering: technical indicators (RSI, MACD, moving averages)
       and valuation ratios (PE, PB, FCF yield)
-- [ ] Rule-based baseline strategies (MA crossover, RSI, MACD, buy & hold)
-- [ ] Timing / Value / Risk scoring layer with plain-language explanations
-- [ ] Position sizing helper (account risk % + stop distance -> suggested
+- [x] Rule-based baseline strategies (MA crossover, buy & hold, score-based)
+- [x] Timing / Value / Risk scoring layer with plain-language explanations
+- [x] Position sizing helper (account risk % + stop distance -> suggested
       dollar allocation)
-- [ ] Walk-forward backtest framework
+- [x] Daily backtest framework with fees, slippage, and no-lookahead signals
 - [ ] ML classifier (direction / probability of positive return) benchmarked
       against the rule-based baselines
 - [ ] Dashboard for browsing per-asset scores and backtest reports
