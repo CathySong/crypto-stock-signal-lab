@@ -38,10 +38,75 @@ create table if not exists crypto_prices (
     primary key (symbol, date)
 );
 
+create table if not exists asset_scores (
+    symbol                   text not null,
+    date                     date not null,
+    price                    numeric,
+    timing_score             numeric,
+    timing_label             text,
+    value_score              numeric,
+    value_label              text,
+    risk_score               numeric,
+    risk_label               text,
+    final_score              numeric,
+    stop_distance_pct        numeric,
+    stop_loss_price          numeric,
+    suggested_pct_of_account numeric,
+    suggested_dollar_amount  numeric,
+    suggested_units          numeric,
+    primary key (symbol, date)
+);
+
+create table if not exists backtest_results (
+    symbol                text not null,
+    strategy              text not null,
+    start_date            date not null,
+    end_date              date not null,
+    fee_bps               numeric not null,
+    slippage_bps          numeric not null,
+    initial_capital       numeric,
+    ending_equity         numeric,
+    total_return          numeric,
+    cagr                  numeric,
+    annualized_volatility numeric,
+    sharpe                numeric,
+    max_drawdown          numeric,
+    win_rate              numeric,
+    average_exposure      numeric,
+    turnover              numeric,
+    days                  numeric,
+    primary key (symbol, strategy, start_date, end_date, fee_bps, slippage_bps)
+);
+
+create table if not exists ml_walkforward_results (
+    symbol                    text not null,
+    horizon_days              integer not null,
+    features                  numeric,
+    samples                   numeric,
+    positive_rate             numeric,
+    accuracy                  numeric,
+    precision                 numeric,
+    recall                    numeric,
+    brier_score               numeric,
+    roc_auc                   numeric,
+    strategy_total_return     numeric,
+    strategy_cagr             numeric,
+    strategy_sharpe           numeric,
+    strategy_max_drawdown     numeric,
+    strategy_average_exposure numeric,
+    strategy_turnover         numeric,
+    ending_equity             numeric,
+    average_probability_up    numeric,
+    primary key (symbol, horizon_days)
+);
+
 -- Helpful indexes for time-series lookups
 create index if not exists idx_stock_prices_date on stock_prices (date);
 create index if not exists idx_crypto_prices_date on crypto_prices (date);
 create index if not exists idx_stock_fundamentals_ticker on stock_fundamentals (ticker);
+create index if not exists idx_asset_scores_date on asset_scores (date);
+create index if not exists idx_backtest_results_symbol on backtest_results (symbol);
+create index if not exists idx_ml_walkforward_results_symbol on ml_walkforward_results (symbol);
 
 -- Row Level Security: enabled by default on new Supabase projects.
 -- Server-side scripts use the service role key, which bypasses RLS
@@ -49,3 +114,6 @@ create index if not exists idx_stock_fundamentals_ticker on stock_fundamentals (
 alter table stock_prices enable row level security;
 alter table stock_fundamentals enable row level security;
 alter table crypto_prices enable row level security;
+alter table asset_scores enable row level security;
+alter table backtest_results enable row level security;
+alter table ml_walkforward_results enable row level security;

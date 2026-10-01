@@ -85,6 +85,9 @@ python -m src.scoring.run_scores
 python -m src.backtest.run_backtests
 python -m src.ml.run_walkforward
 python -m src.dashboard.build_static
+
+# Optional: push raw + processed outputs to Supabase
+python -m src.data.upload_to_supabase --only scores,backtests,ml
 ```
 
 Each script also accepts a `--tickers` / `--coins` override if you want to
@@ -103,6 +106,8 @@ pull a different asset than what's in `config/assets.yaml`.
 - [x] ML classifier (direction / probability of positive return) benchmarked
       against the rule-based baselines
 - [x] Static dashboard for browsing per-asset scores, backtest reports, and
+      ML benchmark results
+- [x] Supabase upload support for processed scores, backtest summaries, and
       ML benchmark results
 
 ## Design principles
