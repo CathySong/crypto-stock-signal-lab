@@ -84,6 +84,7 @@ python -m src.features.fundamentals
 python -m src.scoring.run_scores
 python -m src.backtest.run_backtests
 python -m src.ml.run_walkforward
+python -m src.dashboard.build_static
 ```
 
 Each script also accepts a `--tickers` / `--coins` override if you want to
@@ -101,7 +102,8 @@ pull a different asset than what's in `config/assets.yaml`.
 - [x] Daily backtest framework with fees, slippage, and no-lookahead signals
 - [x] ML classifier (direction / probability of positive return) benchmarked
       against the rule-based baselines
-- [ ] Dashboard for browsing per-asset scores and backtest reports
+- [x] Static dashboard for browsing per-asset scores, backtest reports, and
+      ML benchmark results
 
 ## Design principles
 
