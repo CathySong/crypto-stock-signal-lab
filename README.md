@@ -88,6 +88,9 @@ python -m src.dashboard.build_static
 
 # Optional: push raw + processed outputs to Supabase
 python -m src.data.upload_to_supabase --only scores,backtests,ml
+
+# Local smoke tests
+python -m unittest discover -s tests
 ```
 
 Each script also accepts a `--tickers` / `--coins` override if you want to
@@ -109,6 +112,7 @@ pull a different asset than what's in `config/assets.yaml`.
       ML benchmark results
 - [x] Supabase upload support for processed scores, backtest summaries, and
       ML benchmark results
+- [x] CI smoke tests for core scoring, ML, backtest, and upload helpers
 
 ## Design principles
 
